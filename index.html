@@ -790,7 +790,7 @@ function coursShow(id){
   let h='<div class="cs" style="--c:var(--c-'+id+')"><div class="eyebrow2">'+sec+' · fiche de synthèse</div><h2>'+label+'</h2><p class="intro">'+c.intro+'</p>';
   h+='<h3><span class="ic">10</span>L\'essentiel à savoir dire</h3><ol class="ess">'+c.essentiel.map((e,i)=>'<li><span class="n">'+(i+1)+'</span><span>'+e+'</span></li>').join('')+'</ol>';
   h+='<h3><span class="ic">Aa</span>Vocabulaire</h3><dl>'+c.vocab.map(([t,d])=>'<dt>'+t+'</dt><dd>'+d+'</dd>').join('')+'</dl>';
-  h+='<h3><span class="ic">&lt;/&gt;</span>Extrait typique</h3><div class="code-title">'+escH(c.code.titre)+'</div><pre><span class="lang">'+escH(c.code.lang)+'</span>'+hl(escH(c.code.code))+'</pre>';
+  h+='<h3><span class="ic">&lt;/&gt;</span>Extrait typique</h3><div class="code-title">'+escH(c.code.titre)+'</div><pre><span class="lang">'+escH(c.code.lang)+'</span>'+escH(c.code.code)+'</pre>';
   h+='<h3><span class="ic">!</span>Pièges classiques</h3><ul class="pieges">'+c.pieges.map(p=>'<li>'+p+'</li>').join('')+'</ul>';
   h+='<h3><span class="ic">?</span>Ce que le jury demande souvent</h3>'+c.jury.map(j=>'<div class="jq"><div class="q">'+j.q+'</div><div class="r">'+j.r+'</div></div>').join('');
   h+='<div class="nav-c">'+(prev?'<button class="btn ghost" data-cours="'+prev+'">← '+CATS[k-1][2]+'</button>':'<span></span>')+'<button class="btn ghost" data-cours="home">Tous les modules</button>'+(next?'<button class="btn" data-cours="'+next+'">'+CATS[k+1][2]+' →</button>':'<button class="btn" data-goqcm="'+id+'">Tester en QCM</button>')+'</div></div>';
