@@ -89,6 +89,8 @@ h2.cat span.meta{font-family:"IBM Plex Mono",monospace;font-size:17px;color:var(
 .q-inner .rep{position:relative;padding:16px 20px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 7%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--c) 22%,var(--line));border-radius:10px;margin-bottom:10px}
 .q-inner .rep::before{content:"Réponse";font-family:"IBM Plex Mono",monospace;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--c);display:block;margin-bottom:5px}
 .q-inner p{margin:0}
+.q-inner .ex-lbl{font-family:"IBM Plex Mono",monospace;font-size:.7em;letter-spacing:.12em;text-transform:uppercase;color:var(--c);margin:12px 0 4px}
+.q-inner .ex-txt{background:color-mix(in srgb,var(--c) 10%,var(--surface));border-left:3px solid var(--c);border-radius:0 8px 8px 0;padding:10px 14px;color:var(--ink)}
 pre{margin:0 0 12px;background:var(--code-bg);color:var(--code-ink);padding:16px 20px;border-radius:10px;overflow-x:auto;font-family:"IBM Plex Mono",monospace;font-size:19px;line-height:1.6;position:relative;border:1px solid rgba(255,255,255,.06)}
 pre .lang{position:absolute;top:10px;right:12px;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--code-com);opacity:.8}
 pre .k{color:var(--code-key)} pre .s{color:var(--code-str)} pre .c{color:var(--code-com);font-style:italic}
@@ -245,7 +247,7 @@ const Q = [
 ["env","Qu'est-ce que le débogage et quels outils utilises-tu ?","Trouver et corriger les bugs : console.log, points d'arrêt dans les DevTools ou l'IDE, Xdebug pour PHP, pdb pour Python, lecture des logs serveur."],
 ["env","Qu'est-ce qu'un fichier README et que doit-il contenir ?","La documentation d'entrée d'un projet : description, prérequis, installation, configuration (.env), lancement, tests, déploiement, auteurs et licence."],
 // MAQ
-["maq","Quelle différence entre un wireframe, une maquette et un prototype ?","Wireframe : squelette en niveaux de gris, structure seule. Maquette : rendu graphique fidèle (couleurs, typos). Prototype : maquette cliquable qui simule la navigation."],
+["maq","Quelle différence entre un wireframe, une maquette et un prototype ?","Ce sont trois étapes de plus en plus précises pour dessiner une interface avant de la coder.<br><br><b>1. Le wireframe</b> (fil de fer) : un dessin simplifié, en gris, sans couleur ni image. On y place seulement les blocs : où est le menu, où est le formulaire, où est le bouton. Il répond à la question « qu'est-ce qu'il y a sur l'écran et où ? ».<br><br><b>2. La maquette</b> : le même écran, mais avec le rendu final : vraies couleurs de la charte, polices, logo, images. Elle répond à « à quoi ça ressemblera ? ». C'est une image fixe, on ne peut pas cliquer.<br><br><b>3. Le prototype</b> : on relie les maquettes entre elles pour simuler la navigation : cliquer sur « Créer une facture » ouvre l'écran suivant. Rien n'est codé, mais on peut tester le parcours avec un utilisateur. Il répond à « comment on passe d'un écran à l'autre ? ».\nExemple : pour la page de connexion de SenGestion, le wireframe montre deux rectangles (email, mot de passe) et un bouton ; la maquette affiche le logo, le fond vert et le bouton stylé ; le prototype Figma permet de cliquer sur le bouton et d'arriver sur le tableau de bord."],
 ["maq","Qu'est-ce qu'un zoning ?","La première étape du maquettage : découper l'écran en zones fonctionnelles (en-tête, navigation, contenu, pied de page) sans détail graphique."],
 ["maq","Quel outil de maquettage connais-tu ?","Figma (collaboratif, en ligne), Adobe XD, Sketch, Penpot (open source), Balsamiq pour les wireframes."],
 ["maq","Qu'est-ce qu'une charte graphique ?","Le document qui fixe l'identité visuelle : logo, palette de couleurs, typographies, iconographie, règles d'usage. Elle garantit la cohérence entre les écrans."],
@@ -486,6 +488,8 @@ function buildNav(){
 }
 nav.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cat=b.dataset.cat;buildNav();render()});
 
+// ---- réponse + bloc exemple optionnel
+function repHtml(t){const i=t.indexOf('\nExemple :');if(i<0)return '<p>'+t+'</p>';return '<p>'+t.slice(0,i)+'</p><div class="ex-lbl">Exemple</div><div class="ex-txt">'+t.slice(i+10).trim()+'</div>'}
 // ---- code highlight (léger)
 function hl(c){
   return c.replace(/(&quot;[^&]*?&quot;|"[^"\n]*"|'[^'\n]*')/g,'<span class="s">$1</span>')
@@ -507,7 +511,7 @@ function render(){
       const m=marks[i]||'';
       const code=q[3]?'<pre><span class="lang">'+q[3]+'</span>'+hl(q[4])+'</pre>':'';
       html+='<div class="q '+m+'" data-i="'+i+'" style="--c:var(--c-'+id+');--i:'+Math.min(k,12)+'"><button class="q-head" aria-expanded="false"><span class="num">'+String(i+1).padStart(3,'0')+'</span><span class="t">'+q[1]+'</span><span class="chev">›</span></button>'+
-      '<div class="q-body"><div><div class="q-inner"><div class="rep"><p>'+q[2]+'</p></div>'+code+'<div class="marks"><button class="mark '+(m==='ok'?'ok':'')+'" data-m="ok">Maîtrisée</button><button class="mark '+(m==='todo'?'todo':'')+'" data-m="todo">À revoir</button></div></div></div></div></div>';
+      '<div class="q-body"><div><div class="q-inner"><div class="rep">'+repHtml(q[2])+'</div>'+code+'<div class="marks"><button class="mark '+(m==='ok'?'ok':'')+'" data-m="ok">Maîtrisée</button><button class="mark '+(m==='todo'?'todo':'')+'" data-m="todo">À revoir</button></div></div></div></div></div>';
     });
   });
   list.innerHTML=html||'<p class="empty">Aucune question ne correspond.</p>';
